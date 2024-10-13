@@ -2,17 +2,17 @@ base:
   seed: 42
 
 data_load:
-  filepath: './data/raw/SouthGermanCredit.asc'
-  dataset_csv: './data/Preprocess.csv'
-  dataToModel: './data/DataToModel.csv'
+  filepath: '../data/raw/SouthGermanCredit.asc'
+  dataset_csv: '../data/Preprocess.csv'
+  dataToModel: '../data/DataToModel.csv'
 
 data_split:
   test_size: 0.2
   random_state: 42
-  X_train_set_path: './data/X_train_SouthGermanCredit.csv'
-  X_test_set_path: './data/X_test_SouthGermanCredit.csv'
-  Y_train_set_path: './data/Y_train_SouthGermanCredit.csv'
-  Y_test_set_path: './data/Y_test_SouthGermanCredit.csv'
+  X_train_set_path: '../data/X_train_SouthGermanCredit.csv'
+  X_test_set_path: '../data/X_test_SouthGermanCredit.csv'
+  Y_train_set_path: '../data/Y_train_SouthGermanCredit.csv'
+  Y_test_set_path: '../data/Y_test_SouthGermanCredit.csv'
 
 train:
   cv: 3
@@ -24,4 +24,3 @@ train:
   models: models/
 
 reports:
-  
