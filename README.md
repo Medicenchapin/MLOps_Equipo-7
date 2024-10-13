@@ -1,14 +1,14 @@
-# MLOps
+# MLOps Project - Team 7
 
 <a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
 </a>
 
-A short description of the project.
+This project is designed to demonstrate a range of data manipulation, preprocessing, and machine learning model development tasks using MLOps principles, ensuring reproducibility, data versioning, and efficient pipeline structuring.
 
 ## Clone this repository
 
-For clone, wirte the next line on terminal.
+For clone, write the next line on terminal.
 
 First, locate the folder where you will save the project
 
@@ -24,18 +24,17 @@ cd MLOps_Equipo-7
 
 ## Create and active virtual environment
 
-Create virtual environment named dvc-venv
-
+Create a virtual environment named dvc-venv:
+# Using Conda
 ```
-Create a Virtual Env with conda create "Your Env name"
+conda create --name dvc-venv python=3.8.11
+conda activate dvc-venv
 ```
-
+# Using virtualenv
 ```
-
-```
-
-```
-
+python -m venv dvc-venv
+source dvc-venv/bin/activate  # On macOS/Linux
+dvc-venv\Scripts\activate     # On Windows
 ```
 
 
@@ -43,14 +42,12 @@ Create a Virtual Env with conda create "Your Env name"
 
 The Code is written in Python 3.8.11. If you don't have Python installed you can find it [your link here](https://www.python.org/downloads/). If you are using a lower version of Python you can upgrade using the pip package, ensuring you have the latest version of pip. To install the required packages and libraries, run this command in the project directory after [cloning](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the repository.
 
-```
-Create a Virtual Env with conda create "Your Env name"
-```
-
+After cloning the repository, install the required dependencies by running:
 ```
 pip install -r requirements.txt
 ```
-
+# Running the Application
+Run the application by executing:
 ```
 Run app.py file
 ```
@@ -58,52 +55,30 @@ Run app.py file
 ## Project Organization
 
 ```
-├── LICENSE            <- Open-source license if one is chosen
-├── Makefile           <- Makefile with convenience commands like `make data` or `make train`
-├── README.md          <- The top-level README for developers using this project.
+├── LICENSE            <- Open-source license if applicable
+├── Makefile           <- Commands for easy execution like `make data` or `make train`
+├── README.md          <- Main README for the project
 ├── data
-│   ├── external       <- Data from third party sources.
-│   ├── interim        <- Intermediate data that has been transformed.
-│   ├── processed      <- The final, canonical data sets for modeling.
-│   └── raw            <- The original, immutable data dump.
+│   ├── raw            <- Original data and source files
+│   ├── Preprocess.csv <- Data after manipulation in Part 01
+│   └── Final_Model.csv<- Final processed data from Part 02
 │
-├── docs               <- A default mkdocs project; see www.mkdocs.org for details
+├── docs               <- Additional documentation (if needed)
 │
-├── models             <- Trained and serialized models, model predictions, or model summaries
+├── mlflow             <- MLflow project directory
+│   ├── Dockerfile     <- Docker setup for the project
+│   └── config.env     <- Environment configurations
 │
-├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-│                         the creator's initials, and a short `-` delimited description, e.g.
-│                         `1.0-jqp-initial-data-exploration`.
+├── notebooks          <- Jupyter notebooks for experimentation
+│   ├── fase-1_Part01_v3.ipynb  <- Data manipulation and preparation (Part 01)
+│   ├── fase-1_Part02_v3.ipynb  <- Data exploration and preprocessing (Part 02)
+│   ├── fase-1_Part03_v3.ipynb  <- Model construction and evaluation (Part 03)
+│   └── SVM_Equipo06.ipynb      <- Additional SVM modeling
 │
-├── pyproject.toml     <- Project configuration file with package metadata for
-│                         mlops and configuration for tools like black
-│
-├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-│
-├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-│   └── figures        <- Generated graphics and figures to be used in reporting
-│
-├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-│                         generated with `pip freeze > requirements.txt`
-│
-├── setup.cfg          <- Configuration file for flake8
-│
-└── mlops   <- Source code for use in this project.
-    │
-    ├── __init__.py             <- Makes mlops a Python module
-    │
-    ├── config.py               <- Store useful variables and configuration
-    │
-    ├── dataset.py              <- Scripts to download or generate data
-    │
-    ├── features.py             <- Code to create features for modeling
-    │
-    ├── modeling
-    │   ├── __init__.py
-    │   ├── predict.py          <- Code to run model inference with trained models
-    │   └── train.py            <- Code to train models
-    │
-    └── plots.py                <- Code to create visualizations
+├── dvc.yaml           <- DVC pipeline configuration file
+├── params.yaml        <- Pipeline parameter file
+├── requirements.txt   <- Project dependencies
+└── test.ipynb         <- Test notebook for initial experimentation
 ```
 
 ---
