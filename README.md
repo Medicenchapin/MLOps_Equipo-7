@@ -6,6 +6,55 @@
 
 A short description of the project.
 
+## Clone this repository
+
+For clone, wirte the next line on terminal.
+
+First, locate the folder where you will save the project
+
+C:\Users\PC\Documents\GitHub
+
+```
+git clone https://github.com/Medicenchapin/MLOps_Equipo-7.git
+```
+
+```
+cd MLOps_Equipo-7
+```
+
+## Create and active virtual environment
+
+Create virtual environment named dvc-venv
+
+```
+Create a Virtual Env with conda create "Your Env name"
+```
+
+```
+
+```
+
+```
+
+```
+
+
+## Installtion
+
+The Code is written in Python 3.8.11. If you don't have Python installed you can find it [your link here](https://www.python.org/downloads/). If you are using a lower version of Python you can upgrade using the pip package, ensuring you have the latest version of pip. To install the required packages and libraries, run this command in the project directory after [cloning](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the repository.
+
+```
+Create a Virtual Env with conda create "Your Env name"
+```
+
+```
+pip install -r requirements.txt
+```
+
+```
+Run app.py file
+```
+
 ## Project Organization
 
 ```

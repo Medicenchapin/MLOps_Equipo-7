@@ -1,4 +1,27 @@
-data:
-  filepath: 'D:/Training/ITESM/MLOps_ITESM/wine_ml_pipeline/data/raw/wine_quality_df.csv'
+base:
+  seed: 42
+
+data_load:
+  filepath: './data/raw/SouthGermanCredit.asc'
+  dataset_csv: './data/Preprocess.csv'
   processed: data/processed/
+
+data_split:
+  test_size: 0.2
+  random_state: 42
+  X_train_set_path: './data/X_train_SouthGermanCredit.csv'
+  X_test_set_path: './data/X_test_SouthGermanCredit.csv'
+  Y_train_set_path: './data/Y_train_SouthGermanCredit.csv'
+  Y_test_set_path: './data/Y_test_SouthGermanCredit.csv'
+
+train:
+  cv: 3
+  estimator_name: logreg
+  C: 0.001
+  max_iter: 100
+  multi_class: 'multinomial'
+  model_path: models/model.joblib
   models: models/
+
+reports:
+  
