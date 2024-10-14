@@ -55,30 +55,42 @@ Run app.py file
 ## Project Organization
 
 ```
-├── LICENSE            <- Open-source license if applicable
-├── Makefile           <- Commands for easy execution like `make data` or `make train`
-├── README.md          <- Main README for the project
-├── data
-│   ├── raw            <- Original data and source files
-│   ├── Preprocess.csv <- Data after manipulation in Part 01
-│   └── Final_Model.csv<- Final processed data from Part 02
-│
-├── docs               <- Additional documentation (if needed)
-│
-├── mlflow             <- MLflow project directory
-│   ├── Dockerfile     <- Docker setup for the project
-│   └── config.env     <- Environment configurations
-│
-├── notebooks          <- Jupyter notebooks for experimentation
-│   ├── fase-1_Part01_v3.ipynb  <- Data manipulation and preparation (Part 01)
-│   ├── fase-1_Part02_v3.ipynb  <- Data exploration and preprocessing (Part 02)
-│   ├── fase-1_Part03_v3.ipynb  <- Model construction and evaluation (Part 03)
-│   └── SVM_Equipo06.ipynb      <- Additional SVM modeling
-│
-├── dvc.yaml           <- DVC pipeline configuration file
-├── params.yaml        <- Pipeline parameter file
-├── requirements.txt   <- Project dependencies
-└── test.ipynb         <- Test notebook for initial experimentation
+├── notebooks                                  <- Jupyter notebooks for experimentation
+│   ├── data                                   <- Data folder containing various datasets
+│   │   ├── raw                                <- Original data and source files
+│   │   │   ├── codetable.txt                  <- Metadata or documentation for the dataset
+│   │   │   ├── read_SouthGermanCredit.R       <- R script for data reading or analysis
+│   │   │   ├── SouthGermanCredit.asc          <- Raw data in ASCII format
+│   │   │── DataToModel.csv                    <- Data ready for modeling
+│   │   │── Preprocess.csv                     <- Data after manipulation
+│   │   │── X_train_SouthGermanCredit.csv      <- Training features
+│   │   │── X_test_SouthGermanCredit.csv       <- Testing features
+│   │   │── Y_train_SouthGermanCredit.csv      <- Training labels
+│   │   └── Y_test_SouthGermanCredit.csv       <- Testing labels
+│   ├── Fase-1                                 <- Phase 1 notebooks and related files
+│   │   ├── mlflow                             <- MLflow project directory
+│   │   │   └── Dockerfile                     <- Docker setup for the project
+│   │   ├── .gitignore                         <- Git ignore file
+│   │   ├── .gitkeep                           <- Keeps the empty directory in git
+│   │   ├── config.env                         <- Environment configurations
+│   │   ├── Credit_Data_RF.pkl                 <- Random Forest model
+│   │   ├── data_load.py                       <- Script to load data
+│   │   ├── docker-compose.yaml                <- Docker Compose file
+│   │   ├── fase-1_manipulacion_and_EDA.ipynb  <- Data manipulation and EDA
+│   │   ├── fase-1_Part01_v3.ipynb             <- Data manipulation and preparation (Part 01)
+│   │   ├── fase-1_Part02_v3.ipynb             <- Data exploration and preprocessing (Part 02)
+│   │   ├── fase-1_Part03_v3.ipynb             <- Model construction and evaluation (Part 03)
+│   │   ├── fase-1_Part04_v1.ipynb             <- Additional modeling or evaluation (Part 04)
+│   │   ├── fase-1_Part05_v1.ipynb             <- Further analysis or results (Part 05)
+│   │   ├── Scaler_Credi_Datat.pkl             <- Scaler for data preprocessing
+│   │   └── test.ipynb                         <- Test notebook for initial experimentation
+│   └──fase-1_Part01_v3.ipynb                  <- Data manipulation 
+├── dvc.yaml                                   <- DVC pipeline configuration file
+├── params.yaml                                <- Pipeline parameter file
+├── README.md                                  <- Main README for the project
+├── requirements.txt                           <- Project dependencies
+└── test.ipynb                                 <- Test notebook for initial experimentation
+
 ```
 
 ---
