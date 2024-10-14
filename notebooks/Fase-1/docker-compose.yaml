@@ -4,7 +4,7 @@ services:
   db:
     restart: always
     image: postgres
-    container_name: mlflow_db_team_7
+    container_name: mlflow_db
     expose:
       - '${PG_PORT}'
     networks:
@@ -14,7 +14,7 @@ services:
       - POSTGRES_PASSWORD=${PG_PASSWORD}
       - POSTGRES_DATABASE=${PG_DATABASE}
     volumes:
-      - ./db_data:/var/lib/postgresql/data/fase_1
+      - ./db_data:/var/lib/postgresql/data
     healthcheck:
       test: ['CMD', 'pg_isready', '-p', '${PG_PORT}', '-U', '${PG_USER}']
       interval: 5s
@@ -24,7 +24,7 @@ services:
   s3:
     restart: always
     image: minio/minio
-    container_name: mlflow_minio_team_7
+    container_name: mlflow_minio
     volumes:
       - ./minio_data:/data
     ports:
@@ -49,7 +49,7 @@ services:
 
   create_buckets:
     image: minio/mc
-    container_name: mlflow_create_buckets_team_7
+    container_name: mlflow_create_buckets
     depends_on:
       - s3
     networks:
@@ -67,7 +67,7 @@ services:
     restart: always
     build: ./mlflow
     image: mlflow_server
-    container_name: mlflow_server_team_7
+    container_name: mlflow_server
     depends_on:
       - db
     ports:
