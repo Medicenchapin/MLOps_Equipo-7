@@ -4,5 +4,7 @@ db_data/*
 minio_data/*
 !minio_data/.gitkeep
 
+../../venv/
+config.env
 
 +!.gitkeep
