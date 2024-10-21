@@ -4,7 +4,8 @@ base:
 data_load:
   filepath: '../data/raw/SouthGermanCredit.asc'
   dataset_csv: '../data/Preprocess.csv'
-  dataToModel: '../data/DataToModel.csv'
+  # dataToModel: '../data/DataToModel.csv'
+  dataToModel: 'notebooks/data/DataToModel.csv'
 
 data_split:
   test_size: 0.2
