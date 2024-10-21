@@ -127,9 +127,15 @@ def main():
     # Definimos parámetros de XGBoost
     params = {
         'n_estimators': 100,
-        'max_depth': 3,
+        'max_depth': 2,
         'learning_rate': 0.1,
-        'objective': 'binary:logistic'
+        'objective': 'binary:logistic',
+        'subsample': 0.8,
+        'colsample_bytree': 0.7,
+        'gamma': 1,
+        'min_child_weight': 1,
+        'reg_alpha': 0,
+        'reg_lambda': 1
     }
 
     # Entrenamos modelo
