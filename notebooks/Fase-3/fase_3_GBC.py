@@ -12,6 +12,11 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import (FunctionTransformer, OneHotEncoder,
                                    OrdinalEncoder, StandardScaler)
 from sklearn.ensemble import GradientBoostingClassifier
+import pytest
+import ipytest
+#__file__ = "fase_3_GBC.ipynb"
+#ipytest.config(rewrite_asserts=True, magics=True)
+#ipytest.autoconfig()
 
 mlflow.set_tracking_uri("http://localhost:5001")
 mlflow.set_experiment(f"/dantecesar/fase3")
@@ -98,16 +103,35 @@ class MLflowLogger:
             print("Validation F1 Score:", val_f1)
             print("Run ID: {}".format(run.info.run_id))
 
+class load_dataset:
+    def __init__(self):
+        with open(r'./params.yaml', encoding='utf-8') as conf_file:
+            params_config = yaml.safe_load(conf_file)
+        self.params_config = params_config
+
+    def get(self):        
+            # Cargamos datos
+        #print(params_config['data_load'])
+        data = pd.read_csv(r'./' + self.params_config['data_load']['dataToModel'])
+        print(data.describe())
+        #data.describe()
+        return data
+
 def main():
     """
     Workflow principal.
     """
+    #import os
+    #os.listdir()
+    #ejemplo_dir = os.listdir(r'./')
+    #print(ejemplo_dir)
     # Leemos el archivo de configuración
-    with open(r'params.yaml', encoding='utf-8') as conf_file:
-        config = yaml.safe_load(conf_file)
 
-    # Cargamos datos
-    data = pd.read_csv(config['data_load']['dataToModel'])
+
+    Datos = load_dataset()
+    #data = Datos.get(config)
+    data = Datos.get()
+    data.columns
 
     # Definimos las variables
     var_num = ['duration', 'amount', 'age']
@@ -140,6 +164,11 @@ def main():
     # Registramos resultados en MLflow
     logger = MLflowLogger("GradientBoostingClassifier")
     logger.log(model, params, x_train, y_train, x_test, y_test)
+
+    #pipeline = PipelineWithFeatureEngineering()
+    #pipeline.run_pipeline()
+    #accuracy_score = pipeline.get_accuracy()
+    #print(f'The Accuracy of the model is: {accuracy_score}')
 
 if __name__ == "__main__":
     main()
