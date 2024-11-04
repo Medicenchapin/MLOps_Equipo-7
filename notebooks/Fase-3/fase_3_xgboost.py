@@ -27,17 +27,15 @@ class DataPreprocessor:
                                         ("transf", FunctionTransformer())])
         self.cat_ord_pipe = Pipeline(steps=[("ordin", OrdinalEncoder())])
         self.cat_nom_pipe = Pipeline(steps=[("dummies", OneHotEncoder())])
-        self.num_pipe_nombres = []
-        self.cat_ord_nombres = []
-        self.cat_nom_nombres = []
+        self.num_pipe_nombres = ['duration', 'amount', 'age']
+        self.cat_ord_nombres = ['employment_duration', 'installment_rate', 'present_residence', 'property',
+               'number_credits', 'job']
+        self.cat_nom_nombres = ['status', 'credit_history', 'purpose', 'savings', 'personal_status_sex', 'housing']
 
-    def transform(self, var_num, var_ord, var_nom):
+    def transform(self):
         """
         Transforma las variables numéricas, categóricas ordinales y categóricas nominales.
         """
-        self.num_pipe_nombres = var_num
-        self.cat_ord_nombres = var_ord
-        self.cat_nom_nombres = var_nom
 
         data_num_transformed = self.num_pipe.fit_transform(self.data[self.num_pipe_nombres])
         data_cat_ord_transformed = self.cat_ord_pipe.fit_transform(self.data[self.cat_ord_nombres])
@@ -61,6 +59,17 @@ class ModelTrainer:
         """
         self.model.fit(x_train, y_train)
         return self.model
+    def predict(self, input_data):
+        """
+        Realiza predicciones con el modelo entrenado.
+        """
+        return self.model.predict(input_data)
+    def accuracy(self, x_test, y_test):
+        """
+        Obtiene la precisión del modelo.
+        """
+        y_pred = self.predict(x_test)
+        return accuracy_score(y_test, y_pred)
 
 class MLflowLogger:
     """
@@ -90,7 +99,28 @@ class MLflowLogger:
             mlflow.log_metric("Train F1 Score", train_f1)
             mlflow.log_metric("Validation F1 Score", val_f1)
 
-            mlflow.sklearn.log_model(model, "model")
+            artifact_path = "model"
+            mlflow.sklearn.log_model(model, artifact_path)
+            
+            model_uri = f"runs:/{mlflow.active_run().info.run_id}/{artifact_path}"
+            mlflow.register_model(model_uri, "Modelo_Registrado")
+            
+            client = mlflow.tracking.MlflowClient()
+    
+            latest_version_info = client.get_latest_versions("Modelo_Registrado", stages=["None"])[0]
+            latest_version = latest_version_info.version
+            
+            client.update_model_version(
+                name="Modelo_Registrado",
+                version=latest_version,
+                description="Versión del modelo con accuracy del 75%.",
+            )
+            client.set_model_version_tag(
+                name="Modelo_Registrado",
+                version=latest_version,
+                key="accuracy",
+                value=str(val_accuracy),
+            )
 
             print("Train Accuracy:", train_accuracy)
             print("Validation Accuracy:", val_accuracy)
@@ -98,7 +128,7 @@ class MLflowLogger:
             print("Validation F1 Score:", val_f1)
             print("Run ID: {}".format(run.info.run_id))
 
-class load_dataset:
+class LoadDataset:
     """
     Clase para cargar datos.
     """
@@ -121,7 +151,7 @@ def main():
     Workflow principal.
     """
     
-    raw_data = load_dataset()
+    raw_data = LoadDataset()
     data = raw_data.get()
 
     # Definimos las variables
@@ -161,6 +191,48 @@ def main():
     logger = MLflowLogger("XGBoostClassifier")
     logger.log(model, params, x_train, y_train, x_test, y_test)
 
-if __name__ == "__main__":
-    main()
+def test_accuracy():
+    """
+    Workflow para pruebas.
+    """
+    
+    raw_data = LoadDataset()
+    data = raw_data.get()
+
+    # Preprocesamiento de datos
+    preprocessor = DataPreprocessor(data)
+    data_transformed = preprocessor.transform()
+
+    # Dividimos los datos
+    x = data_transformed
+    y = data['credit_risk']
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42)
+    
+    # Definimos parámetros de XGBoost
+    params = {
+        'n_estimators': 100,
+        'max_depth': 2,
+        'learning_rate': 0.1,
+        'objective': 'binary:logistic',
+        'subsample': 0.8,
+        'colsample_bytree': 0.7,
+        'gamma': 1,
+        'min_child_weight': 1,
+        'reg_alpha': 0,
+        'reg_lambda': 1
+    }
+    
+    # Entrenamos modelo con datos preprocesados
+    trainer = ModelTrainer(params)
+    model = trainer.train(x_train, y_train)
+    actual_accuracy = trainer.accuracy(x_test, y_test)
+    print("Actual Accuracy:", actual_accuracy)
+    
+    # Comparing the accuracy of the first model against the benchmark
+    assert actual_accuracy > 0.7500
+    print("Test passed.")
+
+test_accuracy()
+# if __name__ == "__main__":
+#     main()
     
