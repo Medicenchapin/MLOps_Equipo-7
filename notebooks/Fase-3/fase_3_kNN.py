@@ -1,5 +1,5 @@
 """
-Modelo KNeighbors para registro de resultados con MLFlow.
+Modelo K-Nearest Neighbors (KNN) para registro de resultados con MLFlow.
 """
 import mlflow
 import mlflow.sklearn
@@ -12,9 +12,14 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import (FunctionTransformer, OneHotEncoder,
                                    OrdinalEncoder, StandardScaler)
 from sklearn.neighbors import KNeighborsClassifier
+import pytest
+import ipytest
+#__file__ = "fase_3_KNN.ipynb"
+#ipytest.config(rewrite_asserts=True, magics=True)
+#ipytest.autoconfig()
 
 mlflow.set_tracking_uri("http://localhost:5001")
-mlflow.set_experiment("/jeleramirez/fase3")
+mlflow.set_experiment(f"/jelenaramirez/fase3")
 
 class DataPreprocessor:
     """
@@ -49,7 +54,7 @@ class DataPreprocessor:
 
 class ModelTrainer:
     """
-    Clase para entrenar un modelo kNN.
+    Clase para entrenar un modelo KNeighborsClassifier.
     """
     def __init__(self, params):
         self.params = params
@@ -57,7 +62,7 @@ class ModelTrainer:
 
     def train(self, x_train, y_train):
         """
-        Entrena el modelo kNN.
+        Entrena el modelo.
         """
         self.model.fit(x_train, y_train)
         return self.model
@@ -98,16 +103,28 @@ class MLflowLogger:
             print("Validation F1 Score:", val_f1)
             print("Run ID: {}".format(run.info.run_id))
 
+class load_dataset:
+    def __init__(self):
+        import os
+        os.listdir()
+        ejemplo_dir = os.listdir(r'../../')
+        print(ejemplo_dir)
+        with open(r'../../params_v2.yaml', encoding='utf-8') as conf_file:
+            params_config = yaml.safe_load(conf_file)
+        self.params_config = params_config
+
+    def get(self):        
+        # Cargamos datos
+        data = pd.read_csv(r'../../' + self.params_config['data_load']['dataToModel'])
+        return data
+
 def main():
     """
     Workflow principal.
     """
-    # Leemos el archivo de configuración
-    with open(r'../../params.yaml', encoding='utf-8') as conf_file:
-        config = yaml.safe_load(conf_file)
-
-    # Cargamos datos
-    data = pd.read_csv(config['data_load']['dataToModel'])
+    Datos = load_dataset()
+    data = Datos.get()
+    data.columns
 
     # Definimos las variables
     var_num = ['duration', 'amount', 'age']
@@ -124,11 +141,11 @@ def main():
     y = data['credit_risk']
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42)
 
-    # Definimos parámetros de KNeighbors
+    # Definimos parámetros de KNN
     params = {
-        'n_neighbors' : 3,
-        'weights' : 'uniform',  
-        'metric' : 'euclidean'  
+        'n_neighbors': 3,
+        'weights': 'uniform',
+        'metric': 'euclidean'
     }
 
     # Entrenamos modelo
@@ -136,9 +153,8 @@ def main():
     model = trainer.train(x_train, y_train)
 
     # Registramos resultados en MLflow
-    logger = MLflowLogger("KNeighbors")
+    logger = MLflowLogger("KNeighborsClassifier")
     logger.log(model, params, x_train, y_train, x_test, y_test)
 
 if __name__ == "__main__":
     main()
-    

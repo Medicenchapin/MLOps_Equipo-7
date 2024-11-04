@@ -1,17 +1,25 @@
+"""
+Modelo Random Forest para registro de resultados con MLFlow.
+"""
 import mlflow
 import mlflow.sklearn
 import pandas as pd
 import yaml
 from scipy import sparse
 from sklearn.metrics import accuracy_score, f1_score
-from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import (FunctionTransformer, OneHotEncoder,
                                    OrdinalEncoder, StandardScaler)
 from sklearn.ensemble import RandomForestClassifier
+import pytest
+import ipytest
+#__file__ = "fase_3_RF.ipynb"
+#ipytest.config(rewrite_asserts=True, magics=True)
+#ipytest.autoconfig()
 
 mlflow.set_tracking_uri("http://localhost:5001")
-mlflow.set_experiment("/ignacioaguilar/fase3")
+mlflow.set_experiment(f"/ignacioaguilar/fase3")
 
 class DataPreprocessor:
     """
@@ -46,22 +54,18 @@ class DataPreprocessor:
 
 class ModelTrainer:
     """
-    Clase para entrenar un modelo RandomForestClassifier con GridSearchCV.
+    Clase para entrenar un modelo RandomForestClassifier.
     """
-    def __init__(self, param_grid):
-        self.param_grid = param_grid
-        self.model = RandomForestClassifier()
+    def __init__(self, params):
+        self.params = params
+        self.model = RandomForestClassifier(**self.params)
 
     def train(self, x_train, y_train):
         """
-        Entrena el modelo RandomForestClassifier utilizando GridSearchCV.
+        Entrena el modelo.
         """
-        grid_search = GridSearchCV(estimator=self.model, param_grid=self.param_grid, 
-                                   cv=5, scoring='accuracy', n_jobs=-1, verbose=2)
-        grid_search.fit(x_train, y_train)
-        print("Mejores hiperparámetros encontrados por GridSearch:", grid_search.best_params_)
-        self.best_model = grid_search.best_estimator_
-        return self.best_model
+        self.model.fit(x_train, y_train)
+        return self.model
 
 class MLflowLogger:
     """
@@ -76,7 +80,7 @@ class MLflowLogger:
         """
         with mlflow.start_run() as run:
             mlflow.log_param("model_name", self.model_name)
-            mlflow.log_param("best_params", params)
+            mlflow.log_param("params", params)
 
             y_train_pred = model.predict(x_train)
             y_test_pred = model.predict(x_test)
@@ -99,16 +103,28 @@ class MLflowLogger:
             print("Validation F1 Score:", val_f1)
             print("Run ID: {}".format(run.info.run_id))
 
+class load_dataset:
+    def __init__(self):
+        import os
+        os.listdir()
+        ejemplo_dir = os.listdir(r'../../')
+        print(ejemplo_dir)
+        with open(r'../../params_v2.yaml', encoding='utf-8') as conf_file:
+            params_config = yaml.safe_load(conf_file)
+        self.params_config = params_config
+
+    def get(self):        
+        # Cargamos datos
+        data = pd.read_csv(r'../../' + self.params_config['data_load']['dataToModel'])
+        return data
+
 def main():
     """
     Workflow principal.
     """
-    # Leemos el archivo de configuración
-    with open(r'params.yaml', encoding='utf-8') as conf_file:
-        config = yaml.safe_load(conf_file)
-
-    # Cargamos datos
-    data = pd.read_csv(config['data_load']['dataToModel'])
+    Datos = load_dataset()
+    data = Datos.get()
+    data.columns
 
     # Definimos las variables
     var_num = ['duration', 'amount', 'age']
@@ -125,30 +141,36 @@ def main():
     y = data['credit_risk']
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42)
 
-    # Definimos grid de hiperparámetros para RandomForestClassifier
-    param_grid = {
-    'n_estimators': [50, 100, 200, 300],
-    'max_depth': [10, 15, 20, None],
-    'min_samples_split': [2, 5, 10],
-    'min_samples_leaf': [1, 2, 4],
-    'max_features': ['sqrt', 'log2'],
-    'bootstrap': [True, False],
-    'criterion': ['gini', 'entropy'],
-    'class_weight': ['balanced', None],
-    'oob_score': [True, False],
-    'max_leaf_nodes': [None, 10, 20],
-    'min_impurity_decrease': [0.0, 0.01, 0.05],
-    'random_state': [42]
-}
+    # Definimos parámetros de RandomForest
+    params = {
+        'bootstrap': True,
+        'ccp_alpha': 0.0,
+        'class_weight': 'balanced',
+        'criterion': 'gini',
+        'max_depth': 5,
+        'max_features': 'log2',
+        'max_leaf_nodes': None,
+        'max_samples': None,
+        'min_impurity_decrease': 0.0,
+        'min_samples_leaf': 2,
+        'min_samples_split': 4,
+        'min_weight_fraction_leaf': 0.0,
+        'n_estimators': 30,
+        'n_jobs': None,
+        'oob_score': False,
+        'random_state': None,
+        'verbose': 0,
+        'warm_start': False
+    }
 
-
-    # Entrenamos modelo usando GridSearchCV
-    trainer = ModelTrainer(param_grid)
+    # Entrenamos modelo
+    trainer = ModelTrainer(params)
     model = trainer.train(x_train, y_train)
 
     # Registramos resultados en MLflow
     logger = MLflowLogger("RandomForestClassifier")
-    logger.log(model, trainer.best_model.get_params(), x_train, y_train, x_test, y_test)
+    logger.log(model, params, x_train, y_train, x_test, y_test)
 
 if __name__ == "__main__":
     main()
+
