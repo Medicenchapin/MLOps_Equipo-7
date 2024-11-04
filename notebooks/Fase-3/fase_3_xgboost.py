@@ -98,16 +98,31 @@ class MLflowLogger:
             print("Validation F1 Score:", val_f1)
             print("Run ID: {}".format(run.info.run_id))
 
+class load_dataset:
+    """
+    Clase para cargar datos.
+    """
+    def __init__(self):
+        # Leemos el archivo de configuración
+        with open(r'params.yaml', encoding='utf-8') as conf_file:
+            config = yaml.safe_load(conf_file)
+        self.config = config
+
+    def get(self):
+        """
+        Carga los datos.
+        """
+        # Cargamos datos
+        data = pd.read_csv(self.config['data_load']['dataToModel'])
+        return data
+
 def main():
     """
     Workflow principal.
     """
-    # Leemos el archivo de configuración
-    with open(r'params.yaml', encoding='utf-8') as conf_file:
-        config = yaml.safe_load(conf_file)
-
-    # Cargamos datos
-    data = pd.read_csv(config['data_load']['dataToModel'])
+    
+    raw_data = load_dataset()
+    data = raw_data.get()
 
     # Definimos las variables
     var_num = ['duration', 'amount', 'age']
