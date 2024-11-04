@@ -1,33 +1,23 @@
-{
-        'status': {
-        'range': {
-            'min': 1.0,
-            'max': 4.0
-        },
-        'dtype': float,
-    },
-    'credit_history': {
-        'range': {
-            'min': 0.0,
-            'mean': 2.6
-        },
-        'dtype': float,
-    },
-    'amount': {
-        'range': {
-            'min': 5.0,
-            'std': 1.0
-        },
-        'dtype': float,
-    },
-    'savings': {
-        'range': {
-            'min': 0.1,
-            'std': 0.5
-        },
-        'dtype': float,
-    },
-    'Columns': {
-        'Number': 18
-    }
-}
+status: 
+  min: 1.0
+  max: 4.0
+  dtype: 'float'
+
+tb_columns: 
+  cl_number: 18
+
+credit_history:          
+  min: 0.0
+  mean: 2.6
+
+amount: 
+  min: 5.0
+  std: 1.0
+
+savings:       
+  min: 0.1
+  std: 0.5
+
+columns_table: 
+  number: 18
+    

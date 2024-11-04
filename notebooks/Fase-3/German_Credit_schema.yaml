@@ -3,6 +3,9 @@ status:
   max: 4.0
   dtype: 'float'
 
+tb_columns: 
+  cl_number: 18
+
 credit_history:          
   min: 0.0
   mean: 2.6
@@ -15,6 +18,5 @@ savings:
   min: 0.1
   std: 0.5
 
-Columns: 
-  Number: 18
-    
+columns_table: 
+  number: 18

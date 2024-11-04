@@ -11,12 +11,7 @@ with open(r'./German_Credit_schema.yaml', encoding='utf-8') as conf_file:
 def test_data_input():
     Datos = load_dataset()
     data = Datos.get()
-    print(limits_config['status']['max'])
     print(data.describe())
-    print(limits_config['tb_columns']['cl_number'])
     # Descomenta la siguiente línea si necesitas hacer una afirmación sobre las columnas
-    assert len(data.columns) == limits_config['tb_columns']['cl_number']
-    #assert len(data.columns) == 18
-
-def test_always_passes():
-    assert True
+    # assert data.columns.tolist() == limits_config['columns']['Number']
+    assert len(data.columns) == 18

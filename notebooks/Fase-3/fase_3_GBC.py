@@ -105,15 +105,19 @@ class MLflowLogger:
 
 class load_dataset:
     def __init__(self):
-        with open(r'./params.yaml', encoding='utf-8') as conf_file:
+        import os
+        os.listdir()
+        ejemplo_dir = os.listdir(r'../../')
+        print(ejemplo_dir)
+        with open(r'../../params_v2.yaml', encoding='utf-8') as conf_file:
             params_config = yaml.safe_load(conf_file)
         self.params_config = params_config
 
     def get(self):        
-            # Cargamos datos
+        # Cargamos datos
         #print(params_config['data_load'])
-        data = pd.read_csv(r'./' + self.params_config['data_load']['dataToModel'])
-        print(data.describe())
+        data = pd.read_csv(r'../../' + self.params_config['data_load']['dataToModel'])
+        #print(data.describe())
         #data.describe()
         return data
 
